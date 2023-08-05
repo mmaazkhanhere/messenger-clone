@@ -40,11 +40,11 @@ const NAVIGATION_ITEMS = [
 
 const LeftSideBar = (props: Props) => {
     return (
-        <section className='fixed w-[275px] flex flex-col h-screen  text-white items-stretch'>
+        <section className='fixed w-[275px] flex flex-col h-screen items-stretch px-6'>
             <div className='flex flex-col items-stretch space-y-4 mt-4 h-full'>
                 {
                     NAVIGATION_ITEMS.map((item) =>
-                        <Link className='hover:bg-white/10 text-2xl transition duration-200 rounded-3xl py-2 px-6 flex items-center 
+                        <Link className='hover:bg-white/10 text-xl transition duration-200 rounded-3xl py-2 px-6 flex items-center 
                     justify-start space-x-4 w-fit'
                             href={`/${item.title.toLowerCase()}`} key={item.title}>
                             <div>
@@ -61,7 +61,7 @@ const LeftSideBar = (props: Props) => {
                     )
                 }
                 <button className='w-full rounded-full bg-primary p-4 text-2xl text-center hover:bg-opacity-70 
-            transition duration-200 m-4'>
+                transition duration-200 m-4'>
                     Tweet
                 </button>
             </div>
