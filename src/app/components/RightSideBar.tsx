@@ -28,7 +28,7 @@ const RightSection = () => {
                             key={i}
                             className="hover:bg-white/10 p-4 last:rounded-b-xl transition duration-200"
                         >
-                            <div className="font-bold text-lg ">#trending{i + 1}</div>
+                            <div className="font-bold text-lg ">#Trending{i + 1}</div>
                             <div className="text-xs text-neutral-400">35.4k</div>
                         </div>
                     ))}
