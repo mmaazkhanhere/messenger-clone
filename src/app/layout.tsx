@@ -1,5 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
+import LeftSideBar from './components/LeftSideBar'
+import RightSideBar from './components/RightSideBar'
 
 
 export const metadata: Metadata = {
@@ -14,7 +16,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <div className='w-full h-full flex justify-center items-center relative bg-black text-white'>
+          <div className='xl:max-w-[70vw] w-full h-full flex relative'>
+            <LeftSideBar />
+            {children}
+            <RightSideBar />
+          </div>
+        </div>
+      </body>
     </html>
   )
 }
