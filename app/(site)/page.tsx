@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from "next/image"
+import AuthForm from './components/AuthForm'
 
 type Props = {}
 
@@ -14,7 +15,7 @@ const Home = (props: Props) => {
                     Sign in to your account
                 </h2>
             </div>
-            {/*Auth Form*/}
+            <AuthForm />
         </div>
     )
 }
