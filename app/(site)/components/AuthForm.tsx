@@ -6,6 +6,7 @@ import React, { useState, useCallback } from 'react'; // Import React and some h
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form"; // Import form-related utilities from 'react-hook-form'
 import AuthSocialButton from './AuthSocialButton'; // Import the custom AuthSocialButton component
 import { BsGithub, BsGoogle } from 'react-icons/bs'; // Import icons from 'react-icons/bs'
+import axios from 'axios'
 
 // Define the 'AuthForm' component
 type Props = {};
@@ -42,7 +43,7 @@ const AuthForm = (props: Props) => {
         setIsLoading(true); // Set loading state to 'true' when form is submitted
 
         if (variant === 'REGISTER') {
-            // Perform registration logic (e.g., Axios register request)
+            axios.post('/api/register', data)
         }
         if (variant === 'LOGIN') {
             // Perform login logic (e.g., NextAuth Sign in)
