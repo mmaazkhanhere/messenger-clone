@@ -7,6 +7,8 @@ import { useForm, FieldValues, SubmitHandler } from "react-hook-form"; // Import
 import AuthSocialButton from './AuthSocialButton'; // Import the custom AuthSocialButton component
 import { BsGithub, BsGoogle } from 'react-icons/bs'; // Import icons from 'react-icons/bs'
 import axios from 'axios'
+import { toast } from 'react-hot-toast';
+import { signIn } from "next-auth/react"
 
 // Define the 'AuthForm' component
 type Props = {};
@@ -44,16 +46,39 @@ const AuthForm = (props: Props) => {
 
         if (variant === 'REGISTER') {
             axios.post('/api/register', data)
+                .catch(() => toast.error("Something went wrong"))
+                .finally(() => setIsLoading(false))
         }
         if (variant === 'LOGIN') {
-            // Perform login logic (e.g., NextAuth Sign in)
+            signIn('credentials', {
+                ...data,
+                redirect: false
+            })
+                .then((callback) => {
+                    if (callback?.error) {
+                        toast.error("Invalid Credentials")
+                    }
+                    if (callback?.ok && !callback.error) {
+                        toast.success("Logged In")
+                    }
+                })
+                .finally(() => setIsLoading(false));
         }
     }
 
     // Define a function to handle social sign-in actions (e.g., Google, GitHub)
     const socialAction = (action: string) => {
-        setIsLoading(true); // Set loading state to 'true' for social sign-in
-        // Implement social sign-in logic (e.g., NextAuth Social sign in)
+        setIsLoading(true);
+        signIn(action, { redirect: false })
+            .then((callback) => {
+                if (callback?.error) {
+                    toast.error("Invalid Credentials")
+                }
+                if (callback?.ok && !callback.error) {
+                    toast.success("Logged In")
+                }
+            })
+            .finally(() => setIsLoading(false))
     }
 
     // Render the UI components
