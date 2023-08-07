@@ -1,0 +1,112 @@
+// Define the generator for generating the Prisma client
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Define the datasource for connecting to the MongoDB database
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL") // Use the DATABASE_URL environment variable for the connection URL
+}
+
+// Define the 'User' data model
+model User {
+  // Primary key 'id' field using MongoDB ObjectId
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  // Optional fields
+  name           String?
+  email          String?   @unique // Unique email constraint
+  emailVerified  DateTime? // Date and time when the email was verified
+  image          String? // User's image URL
+  hashedPassword String? // Hashed password for security
+  // Timestamps for creation and updates
+  createdAt      DateTime? @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // Array of conversation IDs that the user is a part of
+  conversationIds String[]       @db.ObjectId
+  // Establish a relation with 'Conversation' model
+  conversations   Conversation[] @relation(fields: [conversationIds], references: [id])
+
+  // Array of message IDs that the user has seen
+  seenMessageIds String[]  @db.ObjectId
+  // Establish a relation with 'Message' model for seen messages
+  seenMessages   Message[] @relation("Seen", fields: [seenMessageIds], references: [id])
+
+  // Establish a relation with 'Account' model
+  accounts Account[]
+  // Establish a relation with 'Message' model for messages sent by the user
+  messages Message[]
+}
+
+// Define the 'Account' data model
+model Account {
+  // Primary key 'id' field using MongoDB ObjectId
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  // Foreign key referencing 'User' model
+  userId            String  @db.ObjectId
+  // Account type and provider details
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  // Establish a relation with 'User' model
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Unique constraint based on provider and providerAccountId
+  @@unique([provider, providerAccountId])
+}
+
+// Define the 'Conversation' data model
+model Conversation {
+  // Primary key 'id' field using MongoDB ObjectId
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  // Timestamps for creation and last message
+  createdAt     DateTime @default(now())
+  lastMessageAt DateTime @default(now())
+  // Conversation name and type (group or not)
+  name          String?
+  isGroup       Boolean?
+
+  // Array of message IDs within the conversation
+  messagesIds String[]  @db.ObjectId
+  // Establish a relation with 'Message' model
+  messages    Message[]
+
+  // Array of user IDs participating in the conversation
+  userIds String[] @db.ObjectId
+  // Establish a relation with 'User' model
+  users   User[]   @relation(fields: [userIds], references: [id])
+}
+
+// Define the 'Message' data model
+model Message {
+  // Primary key 'id' field using MongoDB ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  // Message content and timestamp
+  body      String?
+  image     String?
+  createdAt DateTime @default(now())
+
+  // Array of user IDs who have seen the message
+  seenIds String[] @db.ObjectId
+  // Establish a relation with 'User' model for seen users
+  seen    User[]   @relation("Seen", fields: [seenIds], references: [id])
+
+  // Foreign key referencing 'Conversation' model
+  conversationId String       @db.ObjectId
+  // Establish a relation with 'Conversation' model
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  // Foreign key referencing 'User' model (sender)
+  senderId String @db.ObjectId
+  // Establish a relation with 'User' model (sender)
+  sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}
