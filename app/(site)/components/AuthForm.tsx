@@ -2,18 +2,22 @@
 
 import Button from '@/app/components/Button'; // Import the custom Button component
 import Input from '@/app/components/inputs/Input'; // Import the custom Input component
-import React, { useState, useCallback } from 'react'; // Import React and some hooks
+import React, { useState, useCallback, useEffect } from 'react'; // Import React and some hooks
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form"; // Import form-related utilities from 'react-hook-form'
 import AuthSocialButton from './AuthSocialButton'; // Import the custom AuthSocialButton component
 import { BsGithub, BsGoogle } from 'react-icons/bs'; // Import icons from 'react-icons/bs'
 import axios from 'axios'
 import { toast } from 'react-hot-toast';
-import { signIn } from "next-auth/react"
+import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 // Define the 'AuthForm' component
 type Props = {};
 
 const AuthForm = (props: Props) => {
+
+    const session = useSession();
+    const router = useRouter()
 
     // Define the 'Variant' type to represent the user state ('LOGIN' or 'REGISTER')
     type Variant = 'LOGIN' | 'REGISTER';
@@ -40,12 +44,19 @@ const AuthForm = (props: Props) => {
         }
     });
 
+    useEffect(() => {
+        if (session?.status === 'authenticated') {
+            router.push('/users');
+        }
+    }, [session?.status])
+
     // Define the form submission handler
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         setIsLoading(true); // Set loading state to 'true' when form is submitted
 
         if (variant === 'REGISTER') {
             axios.post('/api/register', data)
+                .then(() => signIn('credentials', data))
                 .catch(() => toast.error("Something went wrong"))
                 .finally(() => setIsLoading(false))
         }
@@ -59,7 +70,8 @@ const AuthForm = (props: Props) => {
                         toast.error("Invalid Credentials")
                     }
                     if (callback?.ok && !callback.error) {
-                        toast.success("Logged In")
+                        toast.success("Logged In");
+                        router.push('/users');
                     }
                 })
                 .finally(() => setIsLoading(false));
