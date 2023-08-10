@@ -23,16 +23,13 @@ const UserBox: React.FC<UserBoxProps> = ({ data }) => {
 
     // Define a click event handler for the UserBox
     const handleClick = useCallback(() => {
-        setIsLoading(true); // Set loading state to true
-        // Send a POST request to '/api/conversations' with user ID
-        axios.post('/api/conversations', {
-            userId: data.id
-        })
+        setIsLoading(true);
+
+        axios.post('/api/conversations', { userId: data.id })
             .then((data) => {
-                // After successful response, navigate to the conversation page
                 router.push(`/conversations/${data.data.id}`);
             })
-            .finally(() => setIsLoading(false)); // Reset loading state
+            .finally(() => setIsLoading(false));
     }, [data, router]);
 
     // Return the UI representation of the UserBox
