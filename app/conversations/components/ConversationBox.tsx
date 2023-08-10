@@ -67,7 +67,7 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({ data, selected }) => 
             )}
         >
             <Avatar user={otherUser} />
-            <div className="min-w-0 flex-1">
+            <div className="min-w-0 flex-1 mt-4">
                 <div className="focus:outline-none">
                     <div className="flex justify-between items-center mb-1">
                         <p className="text-md font-medium text-gray-900">
