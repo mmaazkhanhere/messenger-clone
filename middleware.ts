@@ -14,6 +14,6 @@ export default withAuth({
 export const config = {
     // Define a URL pattern to match certain routes that require authentication.
     matcher: [
-        "/users/:path*"
+        "/users/:path*", "/conversations/:path*"
     ]
 };
