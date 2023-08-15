@@ -11,11 +11,14 @@ import { toast } from 'react-hot-toast';
 import { FiAlertTriangle } from 'react-icons/fi'
 
 interface ConfirmModalProps {
-    isOpen?: boolean,
+    isOpen?: boolean;
     onClose: () => void;
 }
 
-const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose }) => {
+const ConfirmModal: React.FC<ConfirmModalProps> = ({
+    isOpen,
+    onClose
+}) => {
 
     const router = useRouter();
     const { conversationId } = useConversation();
