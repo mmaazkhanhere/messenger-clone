@@ -1,3 +1,6 @@
+/* this AuthForm component provides a complete UI for user authentication, including form handling, 
+social sign-in, and user interface toggling between login and registration modes. */
+
 "use client"
 
 import Button from '@/app/components/Button'; // Import the custom Button component
@@ -11,13 +14,11 @@ import { toast } from 'react-hot-toast';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
-// Define the 'AuthForm' component
-type Props = {};
 
-const AuthForm = (props: Props) => {
+const AuthForm = () => {
 
-    const session = useSession();
-    const router = useRouter()
+    const session = useSession(); //manages the user's authentication session
+    const router = useRouter() //used to handle routing within the application
 
     // Define the 'Variant' type to represent the user state ('LOGIN' or 'REGISTER')
     type Variant = 'LOGIN' | 'REGISTER';
@@ -55,12 +56,16 @@ const AuthForm = (props: Props) => {
         setIsLoading(true); // Set loading state to 'true' when form is submitted
 
         if (variant === 'REGISTER') {
+            /*If user is signing up, an HTTP POST request is made using axios to a registration API endpoint. 
+            Upon success, the user is signed in using the signIn function from next-auth/react. */
             axios.post('/api/register', data)
                 .then(() => signIn('credentials', data))
                 .catch(() => toast.error("Something went wrong"))
                 .finally(() => setIsLoading(false))
         }
         if (variant === 'LOGIN') {
+            /*If the user is loging in the user is signed in using the signIn function. 
+            If successful, the user is redirected to the /users page. */
             signIn('credentials', {
                 ...data,
                 redirect: false
@@ -81,7 +86,8 @@ const AuthForm = (props: Props) => {
     // Define a function to handle social sign-in actions (e.g., Google, GitHub)
     const socialAction = (action: string) => {
         setIsLoading(true);
-        signIn(action, { redirect: false })
+        signIn(action, { redirect: false }) /* uses the signIn function to initiate the social sign-in process. Upon success, 
+        appropriate toasts (notifications) are displayed. */
             .then((callback) => {
                 if (callback?.error) {
                     toast.error("Invalid Credentials")
