@@ -48,7 +48,7 @@ const AuthForm = (props: Props) => {
         if (session?.status === 'authenticated') {
             router.push('/users');
         }
-    }, [session?.status])
+    }, [router, session?.status])
 
     // Define the form submission handler
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
