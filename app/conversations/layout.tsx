@@ -19,4 +19,4 @@ export default async function ConversationsLayout({ children }: { children: Reac
             </div>
         </Sidebar>
     )
-}
+} 

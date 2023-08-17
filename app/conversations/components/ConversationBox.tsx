@@ -24,39 +24,39 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({ data, selected }) => 
 
     const handleClick = useCallback(() => {
         router.push(`/conversations/${data.id}`);
-    }, [data.id, router])
+    }, [data, router]);
 
     const lastMessage = useMemo(() => {
         const messages = data.messages || [];
-        return messages[messages.length - 1];
-    }, [data.messages])
 
-    const userEmail = useMemo(() => {
-        return session.data?.user?.email
-    }, [session.data?.user?.email])
+        return messages[messages.length - 1];
+    }, [data.messages]);
+
+    const userEmail = useMemo(() => session.data?.user?.email,
+        [session.data?.user?.email]);
 
     const hasSeen = useMemo(() => {
         if (!lastMessage) {
             return false;
         }
-
         const seenArray = lastMessage.seen || [];
-
         if (!userEmail) {
             return false;
         }
-
-        return seenArray.filter((user) => user.email === userEmail).length !== 0
+        return seenArray
+            .filter((user) => user.email === userEmail).length !== 0;
     }, [userEmail, lastMessage]);
 
     const lastMessageText = useMemo(() => {
         if (lastMessage?.image) {
             return 'Sent an image';
         }
+
         if (lastMessage?.body) {
-            return lastMessage.body;
+            return lastMessage?.body
         }
-        return "Start a conversation"
+
+        return 'Started a conversation';
     }, [lastMessage]);
 
     return (
@@ -81,18 +81,25 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({ data, selected }) => 
                         <p className="text-md font-medium text-gray-900">
                             {data.name || otherUser.name}
                         </p>
-                        {
-                            lastMessage?.createdAt && (
-                                <p className="text-xs text-gray-400 font-light">
-                                    {
-                                        format(new Date(lastMessage.createdAt), 'p')
-                                    }
-                                </p>
-                            )
-                        }
+                        {lastMessage?.createdAt && (
+                            <p
+                                className="
+                                text-xs 
+                                text-gray-400 
+                                font-light
+                                "
+                            >
+                                {format(new Date(lastMessage.createdAt), 'p')}
+                            </p>
+                        )}
                     </div>
-                    <p className={clsx(`truncate text-sm`,
-                        hasSeen ? 'text-gray-500' : 'text-black font-medium')}>
+                    <p
+                        className={clsx(`
+                        truncate 
+                        text-sm
+                        `,
+                            hasSeen ? 'text-gray-500' : 'text-black font-medium'
+                        )}>
                         {lastMessageText}
                     </p>
                 </div>

@@ -19,12 +19,17 @@ const ConversationList: React.FC<ConversationListProps> = ({ initialItems, users
 
     const [items, setItems] = useState(initialItems);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
     const router = useRouter();
-    const { conversationId, isOpen } = useConversation()
+    const { conversationId, isOpen } = useConversation();
 
     return (
         <>
-            <GroupChatModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} users={users} />
+            <GroupChatModal
+                users={users}
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
             <aside className={clsx(`fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 lg:w-80 lg:block overflow-y-auto
             border-r border-gray-200`,
                 isOpen ? 'hidden' : 'block w-full left-0')}
